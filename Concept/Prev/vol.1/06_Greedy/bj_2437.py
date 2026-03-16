@@ -2,6 +2,7 @@
 7
 3 1 6 2 7 30 1
 """
+# https://www.acmicpc.net/problem/2437 
 #  측정할 수 없는 양의 정수 무게 중 최솟값
 # 브루트포스 라면?
 # 1. 탐색 범위 1~
@@ -31,36 +32,21 @@
   매 순간 "지금 가장 작은 추를 쓴다"는 선택이 전체 최적이고, 이전 선택을 되돌릴 필요가 없으니
   그리디야.
 """
-
+# 1 1 2 3 6 7 30
+# 1: 0 +1 ~ 0 + 1, 1
+# 2: 1 1 + 1 ~ 1 + 1, 2
+# 2 L 
+# 새 추가 들어올 때마다 원래 있던 범위의 가장 작은 값=1 + 새 추 무게 부터 새 범위로 는다.
 import sys
 input = sys.stdin.readline
 
 N  = int(input())
-c_list = list(map(int,input().strip().split(" ")))
-print(N,c_list)
-num = 1
-left_num = 1
-while True:
+c_list = sorted(list(map(int,input().strip().split(" "))))
 
-    candidate_c_list = sorted(list(filter(lambda n: n <= num,c_list)),reverse=True)
-    print(candidate_c_list)
-    print(num,left_num)
-    for i,c in iterate(candidate_c_list): # [Mistake] 4 - 3 - 2 했을 떄 4 - 3 - 1로 넘어가게 하기 o(n*2)
-        check = left_num - c
-        if check > 0:
-            left_num -= c
-            pass
-        elif check == 0:
-            print(f"{num} is measurable")
-            left_num -= c
-            break
-        else:
-            print(f"move to next canddiate")
-            pass
-    print(f"{num} -> {left_num}")
-    if left_num ==0:
-        num += 1
-        left_num = num
-    else:
-        break
-print(f"최솟값 {num}")
+# 입력 배열 관리 : 구해야하는 값이 최솟값이므로 최솟값부터 정렬해서 저장하고, 순회하며 체크
+start, end  = 0,0
+for c in c_list:
+    old_start,old_end = start, end
+    start += c
+    end += c
+    range(old_start,old_end) + range(start,end+1)

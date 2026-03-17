@@ -6,27 +6,48 @@
 2 4
 3 4
 """
+from collections import deque
 import sys 
 input = sys.stdin.readline
 N, M, V = map(int,input().strip().split(" "))
-
 graph = [[] for i in range(N+1)] # 정점에 대해 빈 리스트를 만들고
 for _ in range(M):
     u, v = map(int, input().strip().split(" "))
     graph[u].append(v)
+    graph[v].append(u) # 양방향 그래프니까
 
-def dfs(graph, V):
-    visited = set([V])
-    stack = list(V)
-    while stack:
-        v = stack.pop()
+def dfs(v,visited = []):
+    visited.append(v)
+    for next_item in graph[v]:
+        if next_item not in visited:
+            visited = dfs(next_item, visited)
+    return visited # 탈출 조건 
 
-        for i in graph[v]:
-            visited + # 방문처리 
-            # 자식들 다 stack에 넣기
-            # 재귀 호춣
+def bfs(v):
+    visited = set([v])
+    queue = deque()
+    queue.append(v)
+    ans = []
+    while queue:
+        v = queue.popleft()
+        ans.append(v)
+        for next_item in graph[v]:
+            if next_item not in visited:
+                visited.add(next_item)
+                queue.append(next_item)
+    return ans
+# def bfs(graph,V):
+#     visited = set([V])
+#     queueu = deque()
+#     queue.append(V)
+if __name__ == "__main__":
 
-def bfs(graph,V):
-    visited = set([V])
-    queueu = deque()
-    queue.append(V)
+    
+
+    # print(graph)
+    dfs_ans = dfs(V,[])
+    print(" ".join(map(str,dfs_ans)))
+    bfs_ans = bfs(V)
+    print(" ".join(map(str,bfs_ans)))
+    
+

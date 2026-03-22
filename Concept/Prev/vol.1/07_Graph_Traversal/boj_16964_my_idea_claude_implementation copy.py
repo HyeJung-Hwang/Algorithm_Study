@@ -57,11 +57,12 @@ for _ in range(N - 1):
     graph[u].append(v)
     graph[v].append(u)
 
-order = list(map(int, input().split())) # 정답string
-priority = {   node:idx for idx,node in enumerate(order)}
+order = list(map(int, input().split()))
+priority = {node: i for i, node in enumerate(order)}  # 우선순위 부여
+
 # 각 인접리스트를 우선순위 순으로 정렬
 for node in graph:
-    graph[node].sort(key = lambda x: priority[x])
+    graph[node].sort(key=lambda x: priority[x])
 
 # DFS 실행
 result = []

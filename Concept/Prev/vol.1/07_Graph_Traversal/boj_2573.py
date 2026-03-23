@@ -13,21 +13,53 @@
 
 import sys
 input = sys.stdin.readline
+from collections import queue
 
-def bfs():
-    pass
-def dfs():
-    pass
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]
+def bfs(queue):
+    while queue:
+        u,v = queue.popleft()
+
+        for i in range(4):
+            nx,ny = u+ dx[i], v+dy[i]
+            if 0<= nx < N and 0<= ny < M:
+                if not visited[nx][ny]: # [Mistake]계속하는 실수
+                    if graph[nx][ny] == 0:
+                        graph[u][v] -= 1
+                        visited[nx][ny] = 1
+                        queue.append((nx,ny))
+def dfs(u,v, stack = []):
+    stack.append((u,v))
+    for i in range(4):
+        nx,ny = u+ dx[i], v+dy[i]
+        if 0<= nx < N and 0<= ny < M:
+            if visited[nx][ny]:
+                dfs(nx, ny,stack)
+
+    return stack
 
 if __name__ == "__main__":
     N, M = map(int,input().strip().split(" "))
     graph = [ list(map(int,input().strip().split(" "))) for _ in range(N)]
-    dist = graph.copy()
     # print(N,M)
     # print(graph)
     year_cnt = 1
     while True:
-        # dist에 대해 bfs
-
-        # dfs로 덩어리 수 세가 (아무 시작점에 대해 )
         year_cnt += 1
+        # dist에 대해 bfs] [Mistake]
+        for i in range(N):
+            for j in range(M):
+                if graph[i][j]:
+                    queue.append((i,j))
+        visited = [ [0]*M for _ in range(N)] 
+        bfs(queue)
+        ice_list = []
+        for i in range(N):
+            for j in range(M):
+                ice_list.append((i,j))
+        now_ice_list = dfs()
+        if len(now_ice_list) != len(ice_list):
+            break
+        # dfs로 덩어리 수 세가 (아무 시작점에 대해 
+    print(year_cnt)
